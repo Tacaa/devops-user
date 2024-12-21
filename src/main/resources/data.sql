@@ -28,32 +28,32 @@ INSERT INTO addresses (street, number_of_building, city, country) VALUES ('Junip
 
 
 -- USERS
-INSERT INTO users (first_name, last_name, username, password, email, role, address_id) VALUES
-('John', 'Doe', 'johndoe', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'johndoe@example.com', 'GUEST', 1),
-('Jane', 'Smith', 'janesmith', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'janesmith@example.com', 'GUEST', 2),
-('Robert', 'Johnson', 'robertjohnson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'robertjohnson@example.com', 'GUEST', 3),
-('Emily', 'Davis', 'emilydavis', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'emilydavis@example.com', 'GUEST', 4),
-('Michael', 'Brown', 'michaelbrown', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'michaelbrown@example.com', 'GUEST', 5),
-('Sarah', 'Miller', 'sarahmiller', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'sarahmiller@example.com', 'GUEST', 6),
-('David', 'Wilson', 'davidwilson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'davidwilson@example.com', 'GUEST', 7),
-('Sophia', 'Moore', 'sophiamoore', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'sophiamoore@example.com', 'GUEST', 8),
-('Daniel', 'Taylor', 'danieltaylor', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'danieltaylor@example.com', 'GUEST', 9),
-('Olivia', 'Anderson', 'oliviaanderson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'oliviaanderson@example.com', 'GUEST', 10),
-('James', 'Thomas', 'jamesthomas', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'jamesthomas@example.com', 'GUEST', 11),
-('Ella', 'Jackson', 'ellajackson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'ellajackson@example.com', 'GUEST', 12),
-('William', 'White', 'williamwhite', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'williamwhite@example.com', 'GUEST', 13),
-('Ava', 'Harris', 'avaharris', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'avaharris@example.com', 'GUEST', 14),
-('Christopher', 'Martin', 'christophermartin', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'christophermartin@example.com', 'GUEST', 15),
-('Isabella', 'Thompson', 'isabellathompson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'isabellathompson@example.com', 'HOST', 16),
-('Joseph', 'Garcia', 'josephgarcia', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'josephgarcia@example.com', 'HOST', 17),
-('Mia', 'Martinez', 'miamartinez', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'miamartinez@example.com', 'HOST', 18),
-('Alexander', 'Robinson', 'alexanderrobinson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'alexanderrobinson@example.com', 'HOST', 19),
-('Amelia', 'Clark', 'ameliaclarck', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'ameliaclarck@example.com', 'HOST', 20),
-('Ethan', 'Rodriguez', 'ethanrodriguez', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'ethanrodriguez@example.com', 'HOST', 21),
-('Charlotte', 'Lewis', 'charlottelewis', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'charlottelewis@example.com', 'HOST', 22),
-('Matthew', 'Lee', 'matthewlee', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'matthewlee@example.com', 'HOST', 23),
-('Harper', 'Walker', 'harperwalker', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'harperwalker@example.com', 'HOST', 24),
-('Andrew', 'Hall', 'andrewhall', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'andrewhall@example.com', 'HOST', 25);
+INSERT INTO users (first_name, last_name, username, password, email, role, deleted, address_id) VALUES
+('John', 'Doe', 'johndoe', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'johndoe@example.com', 'GUEST', false, 1),
+('Jane', 'Smith', 'janesmith', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'janesmith@example.com', 'GUEST', false, 2),
+('Robert', 'Johnson', 'robertjohnson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'robertjohnson@example.com', 'GUEST', false, 3),
+('Emily', 'Davis', 'emilydavis', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'emilydavis@example.com', 'GUEST', false, 4),
+('Michael', 'Brown', 'michaelbrown', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'michaelbrown@example.com', 'GUEST', false, 5),
+('Sarah', 'Miller', 'sarahmiller', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'sarahmiller@example.com', 'GUEST', false, 6),
+('David', 'Wilson', 'davidwilson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'davidwilson@example.com', 'GUEST', false, 7),
+('Sophia', 'Moore', 'sophiamoore', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'sophiamoore@example.com', 'GUEST', false, 8),
+('Daniel', 'Taylor', 'danieltaylor', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'danieltaylor@example.com', 'GUEST', false, 9),
+('Olivia', 'Anderson', 'oliviaanderson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'oliviaanderson@example.com', 'GUEST', false, 10),
+('James', 'Thomas', 'jamesthomas', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'jamesthomas@example.com', 'GUEST', false, 11),
+('Ella', 'Jackson', 'ellajackson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'ellajackson@example.com', 'GUEST', false, 12),
+('William', 'White', 'williamwhite', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'williamwhite@example.com', 'GUEST', false, 13),
+('Ava', 'Harris', 'avaharris', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'avaharris@example.com', 'GUEST', false, 14),
+('Christopher', 'Martin', 'christophermartin', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'christophermartin@example.com', 'GUEST', false, 15),
+('Isabella', 'Thompson', 'isabellathompson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'isabellathompson@example.com', 'HOST', false, 16),
+('Joseph', 'Garcia', 'josephgarcia', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'josephgarcia@example.com', 'HOST', false, 17),
+('Mia', 'Martinez', 'miamartinez', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'miamartinez@example.com', 'HOST', false, 18),
+('Alexander', 'Robinson', 'alexanderrobinson', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'alexanderrobinson@example.com', 'HOST', false, 19),
+('Amelia', 'Clark', 'ameliaclarck', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'ameliaclarck@example.com', 'HOST', false, 20),
+('Ethan', 'Rodriguez', 'ethanrodriguez', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'ethanrodriguez@example.com', 'HOST', false, 21),
+('Charlotte', 'Lewis', 'charlottelewis', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'charlottelewis@example.com', 'HOST', false, 22),
+('Matthew', 'Lee', 'matthewlee', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'matthewlee@example.com', 'HOST', false, 23),
+('Harper', 'Walker', 'harperwalker', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'harperwalker@example.com', 'HOST', false, 24),
+('Andrew', 'Hall', 'andrewhall', '$2a$10$X7F3hUST4aTxWHikNRY7gek7xsjW352cF51QmbRehvE9rGJooAMhW', 'andrewhall@example.com', 'HOST', false, 25);
 
 
 --RATES

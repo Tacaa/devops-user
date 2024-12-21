@@ -23,6 +23,7 @@ public class UserDTO {
     private String email;
     private Role role;
     private AddressDTO address;
+    private Boolean deleted;
     private Set<RateDTO> rates;
 
     public static UserDTO from(User user) {
@@ -33,11 +34,11 @@ public class UserDTO {
                 .username(user.getUsername())
                 .role(user.getRole())
                 .email(user.getEmail())
+                .deleted(user.getDeleted())
                 .address(user.getAddress() != null ? AddressDTO.from(user.getAddress()) : null)
                 .rates(user.getRates() != null ? user.getRates().stream()
                         .map(RateDTO::from)
                         .collect(Collectors.toSet()) : new HashSet<>())
                 .build();
     }
-
 }

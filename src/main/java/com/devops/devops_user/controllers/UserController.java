@@ -57,7 +57,7 @@ public class UserController {
 
 
 
-    // /api/users?page=0&size=5&sort=firstName,DESC
+    // /api/devops-user?page=0&size=5&sort=firstName
     @GetMapping
     public ResponseEntity<PagedResponse<UserDTO>> getUserPage(Pageable page) {
         Page<User> users = userService.findAllUsers(page);
@@ -77,7 +77,7 @@ public class UserController {
     }
 
 
-    // /api/users/search?firstName=Fiona&lastName=Gray
+    // /api/devops-user/search?firstName=Fiona&lastName=Gray
     @GetMapping(value = "/search")
     public ResponseEntity<List<UserDTO>> filterUsers(@RequestParam(required = false) String firstName,
                                                               @RequestParam(required = false) String lastName)
@@ -87,6 +87,10 @@ public class UserController {
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
             userDTOS.add(UserDTO.from(user));
+        }
+
+        if(userDTOS.isEmpty()){
+            return new ResponseEntity<>(userDTOS, HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
@@ -115,7 +119,7 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "/{id}")
+    @PostMapping
     public ResponseEntity<Map<String, Object>> create(@RequestBody CreateUserDTO createUserDTO){
         try {
             User user = userService.save(createUserDTO);

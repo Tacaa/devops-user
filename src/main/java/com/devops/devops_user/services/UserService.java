@@ -52,12 +52,12 @@ public class UserService {
         }
 
         User notUniqueUser = userRepository.findByUsername(createUserDTO.getUsername());
-        if(notUniqueUser == null){
+        if(notUniqueUser != null){
             throw new AttributeNotUniqueException("Username not unique");
         }
 
         notUniqueUser = userRepository.findByEmail(createUserDTO.getEmail());
-        if(notUniqueUser == null){
+        if(notUniqueUser != null){
             throw new AttributeNotUniqueException("Email not unique");
         }
 
@@ -74,6 +74,7 @@ public class UserService {
                 .email(createUserDTO.getEmail())
                 .role(createUserDTO.getRole())
                 .address(address)
+                .deleted(false)
                 .password(createUserDTO.getPassword())
                 .rates(new HashSet<>())
                 .build();
@@ -83,18 +84,24 @@ public class UserService {
 
     public User update(Integer userId, UpdateUserDTO updateUserDTO){
         if(updateUserDTO.getFirstName() == null || updateUserDTO.getLastName() == null || updateUserDTO.getUsername() == null
-                || updateUserDTO.getPassword() == null || updateUserDTO.getEmail() == null || updateUserDTO.getRole() == null
+                || updateUserDTO.getPassword() == null || updateUserDTO.getEmail() == null
                 || updateUserDTO.getAddress() == null){
             throw new AttributeNullException("Given attribute is null");
         }
 
+        User user = userRepository.findById(userId).orElse(null);
+
+        if(user == null){
+            throw new AddressNotFound("Given address is not correct.");
+        }
+
         User notUniqueUser = userRepository.findByUsername(updateUserDTO.getUsername());
-        if(notUniqueUser == null){
+        if(notUniqueUser != null && notUniqueUser.getUsername().equals(user.getUsername())){
             throw new AttributeNotUniqueException("Username not unique");
         }
 
         notUniqueUser = userRepository.findByEmail(updateUserDTO.getEmail());
-        if(notUniqueUser == null){
+        if(notUniqueUser != null && notUniqueUser.getEmail().equals(user.getEmail())){
             throw new AttributeNotUniqueException("Email not unique");
         }
 
@@ -107,21 +114,21 @@ public class UserService {
             throw new AddressNotFound("Given address is not correct.");
         }
 
-        User user = userRepository.findById(userId).orElse(null);
 
-        if(user != null){
+
+
             user = User.builder()
                     .firstName(updateUserDTO.getFirstName())
                     .lastName(updateUserDTO.getLastName())
                     .username(updateUserDTO.getUsername())
                     .email(updateUserDTO.getEmail())
+                    .deleted(user.getDeleted())
+                    .role(user.getRole())
                     .password(updateUserDTO.getPassword())
                     .address(address)
                     .build();
             return this.userRepository.save(user);
-        }else{
-            throw new UserNotFound("Given user does not exist.");
-        }
+
     }
 
 

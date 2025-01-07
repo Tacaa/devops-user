@@ -11,8 +11,8 @@ on:
 jobs:
   # Workflow for Pull Requests
   build-and-test-pr:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -39,8 +39,8 @@ jobs:
 
   # Workflow for Push to develop
   build-and-deploy:
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/develop' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -72,7 +72,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/my-spring-boot-app:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/devops-user:latest .
 
       - name: Tag Docker image
         run: |
@@ -82,5 +82,5 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-spring-boot-app:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-spring-boot-app:${{ env.IMAGE_TAG }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/devops-user:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/devops-user:${{ env.IMAGE_TAG }}

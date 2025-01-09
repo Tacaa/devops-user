@@ -66,7 +66,6 @@ public class UserService {
             address = CreateAddressDTO.from(createUserDTO.getAddress());
         }
 
-        // Create the User object using the builder pattern
         User user = User.builder()
                 .firstName(createUserDTO.getFirstName())
                 .lastName(createUserDTO.getLastName())

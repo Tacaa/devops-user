@@ -1,4 +1,4 @@
-package com.devops.devops_user.integration;
+package com.devops.devops_user.unit;
 
 
 import com.devops.devops_user.dto.*;

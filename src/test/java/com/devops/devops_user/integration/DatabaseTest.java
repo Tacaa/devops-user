@@ -1,30 +1,19 @@
 package com.devops.devops_user.integration;
 
 
-import com.devops.devops_user.dto.*;
-import com.devops.devops_user.enumeration.Role;
-import com.devops.devops_user.exceptions.*;
-import com.devops.devops_user.model.Address;
-import com.devops.devops_user.model.User;
-import com.devops.devops_user.repository.AddressRepository;
-import com.devops.devops_user.repository.UserRepository;
+
 import jakarta.transaction.Transactional;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("test") // Activates the test profile

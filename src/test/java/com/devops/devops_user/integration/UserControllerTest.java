@@ -78,7 +78,7 @@ class UserControllerTest {
 
     when(userService.save(any(CreateUserDTO.class))).thenReturn(user);
 
-    mockMvc.perform(post("/api/devops-user")
+    mockMvc.perform(post("/api/user")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(createUserDTO)))
         .andExpect(status().isCreated())
@@ -100,7 +100,7 @@ class UserControllerTest {
 
     when(userService.update(Mockito.eq(1), any(UpdateUserDTO.class))).thenReturn(updatedUser);
 
-    mockMvc.perform(put("/api/devops-user/1")
+    mockMvc.perform(put("/api/user/1")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(updateUserDTO)))
         .andExpect(status().isOk())

@@ -46,6 +46,4 @@ public class User {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @OneToMany(mappedBy = "host", fetch = FetchType.LAZY)
-    private Set<Rate> rates = new HashSet<Rate>();
 }

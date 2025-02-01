@@ -75,7 +75,6 @@ public class UserService {
                 .address(address)
                 .deleted(false)
                 .password(createUserDTO.getPassword())
-                .rates(new HashSet<>())
                 .build();
 
         return this.userRepository.save(user);

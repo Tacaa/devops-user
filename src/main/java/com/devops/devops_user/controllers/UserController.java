@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/devops-user")
+@RequestMapping(value = "/api/user")
 public class UserController {
 
     @Autowired

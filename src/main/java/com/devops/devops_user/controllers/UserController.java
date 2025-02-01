@@ -97,7 +97,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Map<String, Object>> updateUser(@PathVariable Integer id, @RequestBody UpdateUserDTO updateUserDTO){
+    public ResponseEntity<Map<String, Object>> updateUser(@PathVariable("id") Integer id, @RequestBody UpdateUserDTO updateUserDTO){
         try {
             User user = userService.update(id, updateUserDTO);
             Map<String, Object> response = new HashMap<>();
@@ -119,7 +119,7 @@ public class UserController {
         }
     }
 
-    @PostMapping
+    @PostMapping({"", "/"})
     public ResponseEntity<Map<String, Object>> create(@RequestBody CreateUserDTO createUserDTO){
         try {
             User user = userService.save(createUserDTO);

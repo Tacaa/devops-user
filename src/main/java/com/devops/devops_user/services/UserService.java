@@ -91,42 +91,46 @@ public class UserService {
         User user = userRepository.findById(userId).orElse(null);
 
         if(user == null){
-            throw new AddressNotFound("Given address is not correct.");
+            throw new UserNotFound("User does not exist");
         }
 
         User notUniqueUser = userRepository.findByUsername(updateUserDTO.getUsername());
-        if(notUniqueUser != null && notUniqueUser.getUsername().equals(user.getUsername())){
-            throw new AttributeNotUniqueException("Username not unique");
+        if(notUniqueUser != null) {
+            System.out.println(notUniqueUser.getId());
+            System.out.println(user.getId());
+            if (notUniqueUser.getId() != user.getId()) {
+                throw new AttributeNotUniqueException("Username not unique");
+            }
         }
 
         notUniqueUser = userRepository.findByEmail(updateUserDTO.getEmail());
-        if(notUniqueUser != null && notUniqueUser.getEmail().equals(user.getEmail())){
-            throw new AttributeNotUniqueException("Email not unique");
-        }
 
+        if(notUniqueUser != null){
+            if(notUniqueUser.getId() != user.getId()) {
+                throw new AttributeNotUniqueException("Username not unique");
+            }
+        }
 
         Address address = addressRepository.findById(updateUserDTO.getAddress().getId()).orElse(null);
 
-        if(address != null){
-            address = AddressDTO.from(updateUserDTO.getAddress());
-        }else{
+        if(address == null){
             throw new AddressNotFound("Given address is not correct.");
         }
 
+        address.setStreet(updateUserDTO.getAddress().getStreet());
+        address.setCity(updateUserDTO.getAddress().getCity());
+        address.setCountry(updateUserDTO.getAddress().getCountry());
+        address.setNumber(updateUserDTO.getAddress().getNumber());
 
+        user.setFirstName(updateUserDTO.getFirstName());
+        user.setLastName(updateUserDTO.getLastName());
+        user.setUsername(updateUserDTO.getUsername());
+        user.setPassword(updateUserDTO.getPassword());
+        user.setEmail(updateUserDTO.getEmail());
 
+        user.setAddress(address);
 
-            user = User.builder()
-                    .firstName(updateUserDTO.getFirstName())
-                    .lastName(updateUserDTO.getLastName())
-                    .username(updateUserDTO.getUsername())
-                    .email(updateUserDTO.getEmail())
-                    .deleted(user.getDeleted())
-                    .role(user.getRole())
-                    .password(updateUserDTO.getPassword())
-                    .address(address)
-                    .build();
-            return this.userRepository.save(user);
+        return this.userRepository.save(user);
 
     }
 

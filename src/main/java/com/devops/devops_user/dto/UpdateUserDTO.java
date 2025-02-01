@@ -14,6 +14,4 @@ public class UpdateUserDTO {
     private String password;
     private String email;
     private AddressDTO address;
-
-
 }

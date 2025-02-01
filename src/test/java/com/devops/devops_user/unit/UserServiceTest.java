@@ -137,7 +137,7 @@ class UserServiceTest {
     updateUserDTO.setEmail("john.doe@test.com");
     updateUserDTO.setAddress(new AddressDTO());
 
-    assertThrows(AddressNotFound.class, () -> userService.update(1, updateUserDTO));
+    assertThrows(UserNotFound.class, () -> userService.update(1, updateUserDTO));
   }
 
   @Test

@@ -1,27 +1,24 @@
 package com.devops.devops_user.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.devops.devops_user.enumeration.Role;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -37,4 +34,16 @@ public class User {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+
 }

@@ -36,6 +36,9 @@ jobs:
 
       - name: Run tests
         run: mvn test
+      
+      - name: Run inregration tests
+        run: mvn verify
 
   # Workflow for Push to develop
   build-and-deploy:
@@ -64,6 +67,9 @@ jobs:
 
       - name: Run tests
         run: mvn test
+      
+      - name: Run inregration tests
+        run: mvn verify
 
       - name: Log in to DockerHub
         uses: docker/login-action@v2

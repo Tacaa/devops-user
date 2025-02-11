@@ -59,7 +59,7 @@ class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     void createAndGetUser() throws Exception {
         // Create user
-        String createResponse = mockMvc.perform(post("/api/user")
+        String createResponse = mockMvc.perform(post("/api/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createUserDTO)))
                 .andExpect(status().isCreated())
@@ -84,7 +84,7 @@ class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     void updateUser() throws Exception {
         // First create a user
-        String createResponse = mockMvc.perform(post("/api/user")
+        String createResponse = mockMvc.perform(post("/api/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createUserDTO)))
                 .andExpect(status().isCreated())
@@ -128,7 +128,7 @@ class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     void deleteUser() throws Exception {
         // First create a user
-        String createResponse = mockMvc.perform(post("/api/user")
+        String createResponse = mockMvc.perform(post("/api/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createUserDTO)))
                 .andExpect(status().isCreated())
@@ -150,7 +150,7 @@ class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     void getAllUsers() throws Exception {
         // Create a user first
-        mockMvc.perform(post("/api/user")
+        mockMvc.perform(post("/api/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createUserDTO)))
                 .andExpect(status().isCreated());
@@ -165,7 +165,7 @@ class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     void getPaginatedUsers() throws Exception {
         // Create a user first
-        mockMvc.perform(post("/api/user")
+        mockMvc.perform(post("/api/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createUserDTO)))
                 .andExpect(status().isCreated());

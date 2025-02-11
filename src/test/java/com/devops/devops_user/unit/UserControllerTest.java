@@ -119,7 +119,7 @@ class UserControllerTest {
     void createUser_Success() throws Exception {
         when(userService.save(any(CreateUserDTO.class))).thenReturn(testUser);
 
-        mockMvc.perform(post("/api/user")
+        mockMvc.perform(post("/api/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createUserDTO)))
                 .andExpect(status().isCreated())

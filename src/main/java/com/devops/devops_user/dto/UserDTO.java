@@ -1,14 +1,8 @@
 package com.devops.devops_user.dto;
 
 import com.devops.devops_user.enumeration.Role;
-import com.devops.devops_user.model.Address;
 import com.devops.devops_user.model.User;
 import lombok.*;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 
 @Getter
 @Setter

@@ -14,9 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.naming.directory.AttributeInUseException;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 @Service

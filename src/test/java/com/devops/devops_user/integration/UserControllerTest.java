@@ -15,8 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -78,7 +76,7 @@ class UserControllerTest {
 
     when(userService.save(any(CreateUserDTO.class))).thenReturn(user);
 
-    mockMvc.perform(post("/api/user")
+    mockMvc.perform(post("/api/user/register")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(createUserDTO)))
         .andExpect(status().isCreated())

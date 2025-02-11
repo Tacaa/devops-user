@@ -1,6 +1,4 @@
 package com.devops.devops_user.dto;
-
-import com.devops.devops_user.model.Address;
 import lombok.*;
 
 @Getter

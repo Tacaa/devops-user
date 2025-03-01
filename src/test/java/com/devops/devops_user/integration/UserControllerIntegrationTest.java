@@ -47,8 +47,8 @@ class UserControllerIntegrationTest extends BaseIntegrationTest {
         addressDTO.setNumber(123);
 
         createUserDTO = new CreateUserDTO();
-        createUserDTO.setFirstName("John");
-        createUserDTO.setLastName("Doe");
+        createUserDTO.setFirstname("John");
+        createUserDTO.setLastname("Doe");
         createUserDTO.setUsername("johndoe");
         createUserDTO.setPassword("password");
         createUserDTO.setEmail("john@example.com");
@@ -104,7 +104,7 @@ class UserControllerIntegrationTest extends BaseIntegrationTest {
                 .asInt();
 
         updateUserDTO = new UpdateUserDTO();
-        updateUserDTO.setLastName(createUserDTO.getLastName());
+        updateUserDTO.setLastname(createUserDTO.getLastname());
         updateUserDTO.setPassword(createUserDTO.getPassword());
         updateUserDTO.setUsername(createUserDTO.getUsername());
         updateUserDTO.setEmail(createUserDTO.getEmail());
@@ -117,7 +117,7 @@ class UserControllerIntegrationTest extends BaseIntegrationTest {
         updateAddress.setStreet(createUserDTO.getAddress().getStreet());
         updateUserDTO.setAddress(updateAddress);
 
-        updateUserDTO.setFirstName("Jane");
+        updateUserDTO.setFirstname("Jane");
         mockMvc.perform(put("/api/user/" + userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateUserDTO)))

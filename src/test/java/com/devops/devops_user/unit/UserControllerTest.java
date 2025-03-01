@@ -62,8 +62,8 @@ class UserControllerTest {
         addressDTO.setNumber(123);
 
         createUserDTO = new CreateUserDTO();
-        createUserDTO.setFirstName("John");
-        createUserDTO.setLastName("Doe");
+        createUserDTO.setFirstname("John");
+        createUserDTO.setLastname("Doe");
         createUserDTO.setUsername("johndoe");
         createUserDTO.setPassword("password");
         createUserDTO.setEmail("john@example.com");
@@ -78,8 +78,8 @@ class UserControllerTest {
         updateAddressDTO.setNumber(123);
 
         updateUserDTO = new UpdateUserDTO();
-        updateUserDTO.setFirstName("John");
-        updateUserDTO.setLastName("Doe");
+        updateUserDTO.setFirstname("John");
+        updateUserDTO.setLastname("Doe");
         updateUserDTO.setUsername("johndoe");
         updateUserDTO.setPassword("password");
         updateUserDTO.setEmail("john@example.com");

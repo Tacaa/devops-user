@@ -1,10 +1,13 @@
 package com.devops.devops_user.unit;
 
+import com.devops.devops_user.dto.AddressDTO;
 import com.devops.devops_user.dto.CreateAddressDTO;
 import com.devops.devops_user.dto.CreateUserDTO;
+import com.devops.devops_user.dto.UpdateUserDTO;
 import com.devops.devops_user.enumeration.Role;
 import com.devops.devops_user.exceptions.AttributeNotUniqueException;
 import com.devops.devops_user.exceptions.AttributeNullException;
+import com.devops.devops_user.exceptions.UserNotFound;
 import com.devops.devops_user.model.User;
 import com.devops.devops_user.repository.AddressRepository;
 import com.devops.devops_user.repository.UserRepository;
@@ -35,6 +38,7 @@ class UserServiceTest {
   private UserService userService;
 
   private CreateUserDTO createUserDTO;
+  private UpdateUserDTO updateUserDTO;
   private User user;
 
   @BeforeEach
@@ -46,13 +50,28 @@ class UserServiceTest {
     addressDTO.setCountry("Test Country");
 
     createUserDTO = new CreateUserDTO();
-    createUserDTO.setFirstName("John Test");
-    createUserDTO.setLastName("Doe Test");
+    createUserDTO.setFirstname("John Test");
+    createUserDTO.setLastname("Doe Test");
     createUserDTO.setUsername("johndoetest");
     createUserDTO.setPassword("password");
     createUserDTO.setEmail("johntest@example.com");
     createUserDTO.setRole(Role.GUEST);
     createUserDTO.setAddress(addressDTO);
+
+    AddressDTO addressUpdateDTO = new AddressDTO();
+    addressUpdateDTO.setId(1);
+    addressUpdateDTO.setStreet("Test Street");
+    addressUpdateDTO.setNumber(123);
+    addressUpdateDTO.setCity("Test City");
+    addressUpdateDTO.setCountry("Test Country");
+
+    updateUserDTO = new UpdateUserDTO();
+    updateUserDTO.setFirstname("John Test");
+    updateUserDTO.setLastname("Doe Test");
+    updateUserDTO.setUsername("johndoetest");
+    updateUserDTO.setPassword("password");
+    updateUserDTO.setEmail("johntest@example.com");
+    updateUserDTO.setAddress(addressUpdateDTO);
 
     user = User.builder()
             .id(1)
@@ -67,8 +86,6 @@ class UserServiceTest {
 
   @Test
   void createUser_Success() {
-    when(userRepository.findByUsername(any())).thenReturn(null);
-    when(userRepository.findByEmail(any())).thenReturn(null);
     when(userRepository.save(any())).thenReturn(user);
 
     User result = userService.save(createUserDTO);
@@ -80,20 +97,20 @@ class UserServiceTest {
   }
 
   @Test
-  void createUser_DuplicateUsername() {
+  void updateUser_UserNotFound() {
     when(userRepository.findByUsername("johndoetest")).thenReturn(user);
 
-    assertThrows(AttributeNotUniqueException.class, () -> {
-      userService.save(createUserDTO);
+    assertThrows(UserNotFound.class, () -> {
+      userService.update(user.getId(), updateUserDTO);
     });
   }
 
   @Test
-  void createUser_NullAttributes() {
-    createUserDTO.setFirstName(null);
+  void updateUser_NullAttributes() {
+    updateUserDTO.setFirstname(null);
 
     assertThrows(AttributeNullException.class, () -> {
-      userService.save(createUserDTO);
+      userService.update(user.getId(), updateUserDTO);
     });
   }
 

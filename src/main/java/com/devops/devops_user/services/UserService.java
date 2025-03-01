@@ -42,30 +42,14 @@ public class UserService {
     }
 
     public User save(CreateUserDTO createUserDTO){
-        if(createUserDTO.getFirstName() == null || createUserDTO.getLastName() == null || createUserDTO.getUsername() == null
-        || createUserDTO.getPassword() == null || createUserDTO.getEmail() == null || createUserDTO.getRole() == null
-        || createUserDTO.getAddress() == null){
-            throw new AttributeNullException("Given attribute is null");
-        }
-
-        User notUniqueUser = userRepository.findByUsername(createUserDTO.getUsername());
-        if(notUniqueUser != null){
-            throw new AttributeNotUniqueException("Username not unique");
-        }
-
-        notUniqueUser = userRepository.findByEmail(createUserDTO.getEmail());
-        if(notUniqueUser != null){
-            throw new AttributeNotUniqueException("Email not unique");
-        }
-
         Address address = null;
         if (createUserDTO.getAddress() != null) {
             address = CreateAddressDTO.from(createUserDTO.getAddress());
         }
 
         User user = User.builder()
-                .firstName(createUserDTO.getFirstName())
-                .lastName(createUserDTO.getLastName())
+                .firstName(createUserDTO.getFirstname())
+                .lastName(createUserDTO.getLastname())
                 .username(createUserDTO.getUsername())
                 .email(createUserDTO.getEmail())
                 .role(createUserDTO.getRole())
@@ -78,7 +62,14 @@ public class UserService {
     }
 
     public User update(Integer userId, UpdateUserDTO updateUserDTO){
-        if(updateUserDTO.getFirstName() == null || updateUserDTO.getLastName() == null || updateUserDTO.getUsername() == null
+        System.out.println(updateUserDTO.getFirstname());
+        System.out.println(updateUserDTO.getLastname());
+        System.out.println(updateUserDTO.getUsername());
+        System.out.println(updateUserDTO.getPassword());
+        System.out.println(updateUserDTO.getEmail());
+        System.out.println(updateUserDTO.getAddress());
+
+        if(updateUserDTO.getFirstname() == null || updateUserDTO.getLastname() == null || updateUserDTO.getUsername() == null
                 || updateUserDTO.getPassword() == null || updateUserDTO.getEmail() == null
                 || updateUserDTO.getAddress() == null){
             throw new AttributeNullException("Given attribute is null");
@@ -118,8 +109,8 @@ public class UserService {
         address.setCountry(updateUserDTO.getAddress().getCountry());
         address.setNumber(updateUserDTO.getAddress().getNumber());
 
-        user.setFirstName(updateUserDTO.getFirstName());
-        user.setLastName(updateUserDTO.getLastName());
+        user.setFirstName(updateUserDTO.getFirstname());
+        user.setLastName(updateUserDTO.getLastname());
         user.setUsername(updateUserDTO.getUsername());
         user.setPassword(updateUserDTO.getPassword());
         user.setEmail(updateUserDTO.getEmail());

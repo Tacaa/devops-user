@@ -1,6 +1,7 @@
 package com.devops.devops_user.controllers;
 
 
+import com.devops.devops_user.client.GatewayClient;
 import com.devops.devops_user.dto.CreateUserDTO;
 import com.devops.devops_user.dto.PagedResponse;
 import com.devops.devops_user.dto.UpdateUserDTO;
@@ -29,6 +30,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GatewayClient gatewayClient;
+
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Integer id) {
@@ -100,6 +105,10 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> updateUser(@PathVariable("id") Integer id, @RequestBody UpdateUserDTO updateUserDTO){
         try {
             User user = userService.update(id, updateUserDTO);
+
+            //ovdje treba pozvati gateway
+            gatewayClient.updateUser(id, updateUserDTO);
+
             Map<String, Object> response = new HashMap<>();
             response.put("message", null);
             response.put("data", UserDTO.from(user));
@@ -117,6 +126,11 @@ public class UserController {
             response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping({"/save"})
+    public Boolean save(@RequestBody CreateUserDTO createUserDTO){
+        return userService.save(createUserDTO).getId() != null;
     }
 
     @PostMapping({"/register"})

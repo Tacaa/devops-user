@@ -37,8 +37,8 @@ class UserServiceIntegrationTest extends BaseIntegrationTest {
     addressDTO.setCountry("Test Country");
 
     createUserDTO = new CreateUserDTO();
-    createUserDTO.setFirstName("John");
-    createUserDTO.setLastName("Doe");
+    createUserDTO.setFirstname("John");
+    createUserDTO.setLastname("Doe");
     createUserDTO.setUsername("johndoe");
     createUserDTO.setPassword("password");
     createUserDTO.setEmail("john@example.com");

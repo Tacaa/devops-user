@@ -6,10 +6,7 @@ import com.devops.devops_user.dto.CreateUserDTO;
 import com.devops.devops_user.dto.PagedResponse;
 import com.devops.devops_user.dto.UpdateUserDTO;
 import com.devops.devops_user.dto.UserDTO;
-import com.devops.devops_user.exceptions.AddressNotFound;
-import com.devops.devops_user.exceptions.AttributeNotUniqueException;
-import com.devops.devops_user.exceptions.AttributeNullException;
-import com.devops.devops_user.exceptions.UserNotFound;
+import com.devops.devops_user.exceptions.*;
 import com.devops.devops_user.model.User;
 import com.devops.devops_user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,6 +161,12 @@ public class UserController {
             response.put("message", e.getMessage());
             response.put("data", null);
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+
+        }catch (UserCanNotBeDeleted e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            response.put("data", null);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
         }
     }

@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 public interface GatewayClient {
     @RequestMapping(method = RequestMethod.PUT, value = "/api/gateway/update-user/{id}")
     Boolean updateUser(@PathVariable("id") Integer id, @RequestBody UpdateUserDTO updateUserDTO);
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/gateway/disable-user/{id}")
+    Boolean disableUser(@PathVariable("id") Integer id);
+
 }
 
 

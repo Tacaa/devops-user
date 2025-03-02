@@ -1,10 +1,10 @@
 package com.devops.devops_user.services;
 
+import com.devops.devops_user.client.AccommodationClient;
+import com.devops.devops_user.client.GatewayClient;
 import com.devops.devops_user.dto.*;
-import com.devops.devops_user.exceptions.AddressNotFound;
-import com.devops.devops_user.exceptions.AttributeNotUniqueException;
-import com.devops.devops_user.exceptions.AttributeNullException;
-import com.devops.devops_user.exceptions.UserNotFound;
+import com.devops.devops_user.enumeration.Role;
+import com.devops.devops_user.exceptions.*;
 import com.devops.devops_user.model.Address;
 import com.devops.devops_user.model.User;
 import com.devops.devops_user.repository.AddressRepository;
@@ -24,6 +24,12 @@ public class UserService {
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private AccommodationClient accommodationClient;
+
+    @Autowired
+    private GatewayClient gatewayClient;
 
     public User findUserById(Integer id){
         return userRepository.findById(id).orElse(null);
@@ -125,12 +131,35 @@ public class UserService {
     public User delete(Integer userId){
         User user = userRepository.findById(userId).orElse(null);
 
-        if(user != null){
-          user.setDeleted(true);
-          return userRepository.save(user);
-        }else{
+        if(user == null){
             throw new UserNotFound("Given user does not exist.");
         }
+
+        //provjera da li je guest ili host
+        if(user.getRole() == Role.GUEST){
+            //provjera ako nema rezervacija brise se, ukoliko ima error
+            boolean guestHasReservation = accommodationClient.checkIsGuestHavingReservationAtMoment(user.getId());
+
+            if(guestHasReservation){
+                throw new UserCanNotBeDeleted("Guest has reservations in future");
+            }
+        }else{
+            //host ukoliko nema rezervacija za svoje smjestaje brise se, u suprotnom error
+            boolean hostHasReservation = accommodationClient.checkIsHostHavingReservationAtMoment(user.getId());
+
+            if(hostHasReservation){
+                throw new UserCanNotBeDeleted("Guest has reservations in future");
+            }
+
+           //brisi smjestaj
+            accommodationClient.deleteAccommodationsOfHost(user.getId());
+        }
+
+        //disable user
+        gatewayClient.disableUser(user.getId());
+
+        user.setDeleted(true);
+        return userRepository.save(user);
 
     }
 

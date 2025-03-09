@@ -1,175 +1,411 @@
-package com.devops.devops_user.unit;
+package  com.devops.devops_user.unit;
 
+import com.devops.devops_user.client.GatewayClient;
 import com.devops.devops_user.controllers.UserController;
 import com.devops.devops_user.dto.*;
 import com.devops.devops_user.enumeration.Role;
-import com.devops.devops_user.exceptions.UserNotFound;
+import com.devops.devops_user.exceptions.*;
+import com.devops.devops_user.model.Address;
 import com.devops.devops_user.model.User;
 import com.devops.devops_user.services.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.*;
 
-@WebMvcTest(UserController.class)
 class UserControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private UserService userService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Mock
+    private GatewayClient gatewayClient;
+
+    @InjectMocks
+    private UserController userController;
 
     private User testUser;
+    private List<User> userList;
     private CreateUserDTO createUserDTO;
     private UpdateUserDTO updateUserDTO;
+    private Address address;
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        // Create test data
+        address = Address.builder()
+                .id(1)
+                .street("Test Street")
+                .city("Test City")
+                .country("Test Country")
+                .number(123)
+                .build();
+
         testUser = User.builder()
                 .id(1)
                 .firstName("John")
                 .lastName("Doe")
                 .username("johndoe")
                 .email("john@example.com")
+                .password("password")
                 .role(Role.GUEST)
+                .address(address)
                 .deleted(false)
                 .build();
 
-        CreateAddressDTO addressDTO = new CreateAddressDTO();
-        addressDTO.setStreet("Test Street");
-        addressDTO.setCity("Test City");
-        addressDTO.setCountry("Test Country");
-        addressDTO.setNumber(123);
+        User secondUser = User.builder()
+                .id(2)
+                .firstName("Jane")
+                .lastName("Doe")
+                .username("janedoe")
+                .email("jane@example.com")
+                .password("password")
+                .role(Role.HOST)
+                .address(address)
+                .deleted(false)
+                .build();
 
-        createUserDTO = new CreateUserDTO();
-        createUserDTO.setFirstname("John");
-        createUserDTO.setLastname("Doe");
-        createUserDTO.setUsername("johndoe");
-        createUserDTO.setPassword("password");
-        createUserDTO.setEmail("john@example.com");
-        createUserDTO.setRole(Role.GUEST);
-        createUserDTO.setAddress(addressDTO);
+        userList = new ArrayList<>();
+        userList.add(testUser);
+        userList.add(secondUser);
 
-        AddressDTO updateAddressDTO = new AddressDTO();
-        updateAddressDTO.setId(1);
-        updateAddressDTO.setStreet("Test Street");
-        updateAddressDTO.setCity("Test City");
-        updateAddressDTO.setCountry("Test Country");
-        updateAddressDTO.setNumber(123);
+        // DTO setup
+        AddressDTO addressDTO = AddressDTO.builder()
+                .id(1)
+                .street("Test Street")
+                .city("Test City")
+                .country("Test Country")
+                .number(123)
+                .build();
 
-        updateUserDTO = new UpdateUserDTO();
-        updateUserDTO.setFirstname("John");
-        updateUserDTO.setLastname("Doe");
-        updateUserDTO.setUsername("johndoe");
-        updateUserDTO.setPassword("password");
-        updateUserDTO.setEmail("john@example.com");
-        updateUserDTO.setAddress(updateAddressDTO);
+        CreateAddressDTO createAddressDTO = CreateAddressDTO.builder()
+                .street("Test Street")
+                .city("Test City")
+                .country("Test Country")
+                .number(123)
+                .build();
+
+        createUserDTO = CreateUserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .username("johndoe")
+                .email("john@example.com")
+                .password("password")
+                .role(Role.GUEST)
+                .address(createAddressDTO)
+                .build();
+
+        updateUserDTO = UpdateUserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .username("johndoe")
+                .email("john@example.com")
+                .password("password")
+                .address(addressDTO)
+                .build();
     }
 
     @Test
-    void getUserById_Success() throws Exception {
+    void getUser_WhenUserExists_ReturnsUserDTO() {
+        // Arrange
         when(userService.findUserById(1)).thenReturn(testUser);
 
-        mockMvc.perform(get("/api/user/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("John"))
-                .andExpect(jsonPath("$.lastName").value("Doe"));
+        // Act
+        ResponseEntity<UserDTO> response = userController.getUser(1);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(testUser.getId(), response.getBody().getId());
+        assertEquals(testUser.getFirstName(), response.getBody().getFirstName());
+        assertEquals(testUser.getLastName(), response.getBody().getLastName());
+        assertEquals(testUser.getUsername(), response.getBody().getUsername());
+        assertEquals(testUser.getEmail(), response.getBody().getEmail());
     }
 
     @Test
-    void getUserById_NotFound() throws Exception {
+    void getUser_WhenUserDoesNotExist_ReturnsNotFound() {
+        // Arrange
         when(userService.findUserById(999)).thenReturn(null);
 
-        mockMvc.perform(get("/api/user/999"))
-                .andExpect(status().isNotFound());
+        // Act
+        ResponseEntity<UserDTO> response = userController.getUser(999);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
     }
 
     @Test
-    void getAllUsers_Success() throws Exception {
-        List<User> users = Arrays.asList(testUser);
-        when(userService.findAllUsers()).thenReturn(users);
+    void getAllUsers_ReturnsListOfUserDTOs() {
+        // Arrange
+        when(userService.findAllUsers()).thenReturn(userList);
 
-        mockMvc.perform(get("/api/user/all"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].firstName").value("John"))
-                .andExpect(jsonPath("$[0].lastName").value("Doe"));
+        // Act
+        ResponseEntity<List<UserDTO>> response = userController.getAllUsers();
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(2, response.getBody().size());
     }
 
     @Test
-    void createUser_Success() throws Exception {
-        when(userService.save(any(CreateUserDTO.class))).thenReturn(testUser);
+    void getUserPage_ReturnsPagedResponse() {
+        // Arrange
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<User> userPage = new PageImpl<>(userList, pageable, userList.size());
+        when(userService.findAllUsers(pageable)).thenReturn(userPage);
 
-        mockMvc.perform(post("/api/user/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createUserDTO)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.firstName").value("John"))
-                .andExpect(jsonPath("$.data.lastName").value("Doe"));
+        // Act
+        ResponseEntity<PagedResponse<UserDTO>> response = userController.getUserPage(pageable);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(2, response.getBody().getContent().size());
+        assertEquals(1, response.getBody().getTotalPages());
+        assertEquals(2, response.getBody().getTotalElements());
     }
 
     @Test
-    void updateUser_Success() throws Exception {
-        when(userService.update(eq(1), any(UpdateUserDTO.class))).thenReturn(testUser);
+    void filterUsers_WhenUsersFound_ReturnsUserDTOs() {
+        // Arrange
+        when(userService.findByFirstNameAndLastName("John", "Doe")).thenReturn(List.of(testUser));
 
-        mockMvc.perform(put("/api/user/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateUserDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.firstName").value("John"))
-                .andExpect(jsonPath("$.data.lastName").value("Doe"));
+        // Act
+        ResponseEntity<List<UserDTO>> response = userController.filterUsers("John", "Doe");
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().size());
     }
 
     @Test
-    void updateUser_NotFound() throws Exception {
-        when(userService.update(eq(999), any(UpdateUserDTO.class)))
-                .thenThrow(new UserNotFound("User not found"));
+    void filterUsers_WhenNoUsersFound_ReturnsNotFound() {
+        // Arrange
+        when(userService.findByFirstNameAndLastName("Unknown", "Person")).thenReturn(new ArrayList<>());
 
-        mockMvc.perform(put("/api/user/999")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateUserDTO)))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("User not found"));
+        // Act
+        ResponseEntity<List<UserDTO>> response = userController.filterUsers("Unknown", "Person");
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().isEmpty());
     }
 
     @Test
-    void deleteUser_Success() throws Exception {
-        testUser.setDeleted(true);
+    void updateUser_WhenUserExists_ReturnsUpdatedUser() {
+        // Arrange
+        when(userService.update(1, updateUserDTO)).thenReturn(testUser);
+        when(gatewayClient.updateUser(1, updateUserDTO)).thenReturn(true);
+
+        // Act
+        ResponseEntity<Map<String, Object>> response = userController.updateUser(1, updateUserDTO);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertNull(response.getBody().get("message"));
+
+        UserDTO returnedUser = (UserDTO) response.getBody().get("data");
+        assertEquals(testUser.getId(), returnedUser.getId());
+        assertEquals(testUser.getFirstName(), returnedUser.getFirstName());
+
+        verify(gatewayClient, times(1)).updateUser(1, updateUserDTO);
+    }
+
+    @Test
+    void updateUser_WhenUserNotFound_ReturnsNotFound() {
+        // Arrange
+        when(userService.update(999, updateUserDTO)).thenThrow(new UserNotFound("User does not exist"));
+
+        // Act
+        ResponseEntity<Map<String, Object>> response = userController.updateUser(999, updateUserDTO);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("User does not exist", response.getBody().get("message"));
+        assertNull(response.getBody().get("data"));
+
+        verify(gatewayClient, never()).updateUser(anyInt(), any(UpdateUserDTO.class));
+    }
+
+    @Test
+    void updateUser_WhenAttributeNull_ReturnsBadRequest() {
+        // Arrange
+        when(userService.update(1, updateUserDTO))
+                .thenThrow(new AttributeNullException("Given attribute is null"));
+
+        // Act
+        ResponseEntity<Map<String, Object>> response = userController.updateUser(1, updateUserDTO);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Given attribute is null", response.getBody().get("message"));
+        assertNull(response.getBody().get("data"));
+    }
+
+    @Test
+    void updateUser_WhenAttributeNotUnique_ReturnsBadRequest() {
+        // Arrange
+        when(userService.update(1, updateUserDTO))
+                .thenThrow(new AttributeNotUniqueException("Username not unique"));
+
+        // Act
+        ResponseEntity<Map<String, Object>> response = userController.updateUser(1, updateUserDTO);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Username not unique", response.getBody().get("message"));
+        assertNull(response.getBody().get("data"));
+    }
+
+    @Test
+    void updateUser_WhenAddressNotFound_ReturnsNotFound() {
+        // Arrange
+        when(userService.update(1, updateUserDTO))
+                .thenThrow(new AddressNotFound("Given address is not correct."));
+
+        // Act
+        ResponseEntity<Map<String, Object>> response = userController.updateUser(1, updateUserDTO);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Given address is not correct.", response.getBody().get("message"));
+        assertNull(response.getBody().get("data"));
+    }
+
+    @Test
+    void save_WhenValidInput_ReturnsTrue() {
+        // Arrange
+        when(userService.save(createUserDTO)).thenReturn(testUser);
+
+        // Act
+        Boolean result = userController.save(createUserDTO);
+
+        // Assert
+        assertTrue(result);
+    }
+
+    @Test
+    void register_WhenValidInput_ReturnsCreatedUser() {
+        // Arrange
+        when(userService.save(createUserDTO)).thenReturn(testUser);
+
+        // Act
+        ResponseEntity<Map<String, Object>> response = userController.create(createUserDTO);
+
+        // Assert
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertNull(response.getBody().get("message"));
+
+        UserDTO returnedUser = (UserDTO) response.getBody().get("data");
+        assertEquals(testUser.getId(), returnedUser.getId());
+        assertEquals(testUser.getFirstName(), returnedUser.getFirstName());
+    }
+
+    @Test
+    void register_WhenAttributeNull_ReturnsBadRequest() {
+        // Arrange
+        when(userService.save(createUserDTO))
+                .thenThrow(new AttributeNullException("Given attribute is null"));
+
+        // Act
+        ResponseEntity<Map<String, Object>> response = userController.create(createUserDTO);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Given attribute is null", response.getBody().get("message"));
+        assertNull(response.getBody().get("data"));
+    }
+
+    @Test
+    void register_WhenAttributeNotUnique_ReturnsBadRequest() {
+        // Arrange
+        when(userService.save(createUserDTO))
+                .thenThrow(new AttributeNotUniqueException("Username not unique"));
+
+        // Act
+        ResponseEntity<Map<String, Object>> response = userController.create(createUserDTO);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Username not unique", response.getBody().get("message"));
+        assertNull(response.getBody().get("data"));
+    }
+
+    @Test
+    void delete_WhenUserExists_ReturnsDeletedUser() {
+        // Arrange
         when(userService.delete(1)).thenReturn(testUser);
 
-        mockMvc.perform(delete("/api/user/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.deleted").value(true));
+        // Act
+        ResponseEntity<Map<String, Object>> response = userController.delete(1);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertNull(response.getBody().get("message"));
+
+        UserDTO returnedUser = (UserDTO) response.getBody().get("data");
+        assertEquals(testUser.getId(), returnedUser.getId());
     }
 
     @Test
-    void getUserPage_Success() throws Exception {
-        List<User> users = Arrays.asList(testUser);
-        Page<User> page = new PageImpl<>(users);
-        when(userService.findAllUsers(any(Pageable.class))).thenReturn(page);
+    void delete_WhenUserNotFound_ReturnsNotFound() {
+        // Arrange
+        when(userService.delete(999)).thenThrow(new UserNotFound("Given user does not exist."));
 
-        mockMvc.perform(get("/api/user?page=0&size=10"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].firstName").value("John"))
-                .andExpect(jsonPath("$.totalPages").value(1));
+        // Act
+        ResponseEntity<Map<String, Object>> response = userController.delete(999);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Given user does not exist.", response.getBody().get("message"));
+        assertNull(response.getBody().get("data"));
+    }
+
+    @Test
+    void delete_WhenUserCannotBeDeleted_ReturnsBadRequest() {
+        // Arrange
+        when(userService.delete(1)).thenThrow(new UserCanNotBeDeleted("Guest has reservations in future"));
+
+        // Act
+        ResponseEntity<Map<String, Object>> response = userController.delete(1);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Guest has reservations in future", response.getBody().get("message"));
+        assertNull(response.getBody().get("data"));
     }
 }

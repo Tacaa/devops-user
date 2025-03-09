@@ -1,15 +1,13 @@
 package com.devops.devops_user.dto;
 
 import com.devops.devops_user.enumeration.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CreateUserDTO {
     private String firstname;
     private String lastname;

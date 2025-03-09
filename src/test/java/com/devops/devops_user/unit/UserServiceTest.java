@@ -98,8 +98,6 @@ class UserServiceTest {
 
   @Test
   void updateUser_UserNotFound() {
-    when(userRepository.findByUsername("johndoetest")).thenReturn(user);
-
     assertThrows(UserNotFound.class, () -> {
       userService.update(user.getId(), updateUserDTO);
     });

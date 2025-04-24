@@ -2,6 +2,7 @@ package com.devops.devops_user.integration;
 
 import com.devops.devops_user.client.AccommodationClient;
 import com.devops.devops_user.client.GatewayClient;
+import com.devops.devops_user.client.NotificationClient;
 import com.devops.devops_user.dto.CreateAddressDTO;
 import com.devops.devops_user.dto.CreateUserDTO;
 import com.devops.devops_user.dto.AddressDTO;
@@ -40,6 +41,9 @@ public class UserServiceIntegrationTest {
 
   @Mock
   private AddressRepository addressRepository;
+
+  @Mock
+  private NotificationClient notificationClient;
 
   @Mock
   private AccommodationClient accommodationClient;
@@ -193,6 +197,10 @@ public class UserServiceIntegrationTest {
       return savedUser;
     });
 
+    // ✅ Use thenReturn instead of doNothing
+    when(notificationClient.saveNotificationsPreferences(any()))
+            .thenReturn(null); // or a dummy response object if needed
+
     // Act
     User result = userService.save(createUserDTO);
 
@@ -205,7 +213,10 @@ public class UserServiceIntegrationTest {
     assertEquals(createUserDTO.getPassword(), result.getPassword());
     assertEquals(createUserDTO.getRole(), result.getRole());
     assertFalse(result.getDeleted());
+
+    verify(notificationClient).saveNotificationsPreferences(any());
   }
+
 
   @Test
   void update_ValidUserDTO_ReturnsUpdatedUser() {

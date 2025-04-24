@@ -1,5 +1,6 @@
 package com.devops.devops_user.unit;
 
+import com.devops.devops_user.client.NotificationClient;
 import com.devops.devops_user.dto.AddressDTO;
 import com.devops.devops_user.dto.CreateAddressDTO;
 import com.devops.devops_user.dto.CreateUserDTO;
@@ -33,6 +34,10 @@ class UserServiceTest {
 
   @Mock
   private AddressRepository addressRepository;
+
+  @Mock
+  private NotificationClient notificationClient;
+
 
   @InjectMocks
   private UserService userService;
@@ -94,7 +99,9 @@ class UserServiceTest {
     assertEquals("John Test", result.getFirstName());
     assertEquals("Doe Test", result.getLastName());
     verify(userRepository).save(any());
+    verify(notificationClient).saveNotificationsPreferences(any());
   }
+
 
   @Test
   void updateUser_UserNotFound() {

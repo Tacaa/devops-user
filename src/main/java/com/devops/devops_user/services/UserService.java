@@ -2,6 +2,7 @@ package com.devops.devops_user.services;
 
 import com.devops.devops_user.client.AccommodationClient;
 import com.devops.devops_user.client.GatewayClient;
+import com.devops.devops_user.client.NotificationClient;
 import com.devops.devops_user.dto.*;
 import com.devops.devops_user.enumeration.Role;
 import com.devops.devops_user.exceptions.*;
@@ -30,6 +31,9 @@ public class UserService {
 
     @Autowired
     private GatewayClient gatewayClient;
+
+    @Autowired
+    private NotificationClient notificationClient;
 
     public User findUserById(Integer id){
         return userRepository.findById(id).orElse(null);
@@ -64,7 +68,18 @@ public class UserService {
                 .password(createUserDTO.getPassword())
                 .build();
 
-        return this.userRepository.save(user);
+        user = this.userRepository.save(user);
+
+        //kreiraj preference za notifikacije
+        if(user.getRole().equals(Role.GUEST)){
+            CreateNotificationsPreferencesDTO preferencesDTO = CreateNotificationsPreferencesDTO.builder().userId(user.getId()).isGuest(true).build();
+            notificationClient.saveNotificationsPreferences(preferencesDTO);
+        }else{
+            CreateNotificationsPreferencesDTO preferencesDTO = CreateNotificationsPreferencesDTO.builder().userId(user.getId()).isGuest(false).build();
+            notificationClient.saveNotificationsPreferences(preferencesDTO);
+        }
+
+        return user;
     }
 
     public User update(Integer userId, UpdateUserDTO updateUserDTO){
